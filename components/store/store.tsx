@@ -43,8 +43,8 @@ interface AddStoreProps {
 
 export const StoreForm = ({ email, image, name, store }: AddStoreProps) => {
   return (
-    <Card className="flex flex-col gap-2 dark:bg-black">
-      <CardHeader>
+    <Card className="flex flex-col gap-2 dark:bg-black border-0 shadow-none sm:border sm:shadow">
+      <CardHeader className="flex flex-col justify-center">
         <div className="flex items-center justify-between">
           <Link href="/">
             <CardTitle className="text-[16px] font-bold">BookEase</CardTitle>

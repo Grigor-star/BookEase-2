@@ -125,7 +125,7 @@ export default function AddStorePage() {
                 onSubmit={form1.handleSubmit(onSubmit)}
                 className="flex flex-col space-y-4"
               >
-                <div className=" w-full flex space-x-2 items-center justify-center">
+                <div className=" w-full flex flex-col space-y-4 sm:space-y-0 sm:flex-row sm:space-x-2 items-center justify-center">
                   <FormField
                     control={form1.control}
                     name="storeName"

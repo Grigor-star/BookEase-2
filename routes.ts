@@ -4,6 +4,7 @@ export const authRoutes = ["/auth/login", "/auth/register"];
 export const DEFAULT_LOGIN_REDIRECT = "/store";
 export const storeRoutes = [
   "/store/dashboard",
+  "/store/appointments",
   "/store/invoices",
   "/store/services",
   "/store/team",
