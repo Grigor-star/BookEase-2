@@ -71,6 +71,7 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
             </TabsTrigger>
             {categories.map((category) => (
               <TabsTrigger
+                key={category.id}
                 className="px-7 flex items-center gap-2"
                 value={category.title}
               >
