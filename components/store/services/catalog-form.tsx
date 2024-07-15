@@ -167,7 +167,11 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
           )}
         </TabsContent>
         {categories.map((category) => (
-          <TabsContent value={category.title} className="p-2 h-full">
+          <TabsContent
+            key={category.id}
+            value={category.title}
+            className="p-2 h-full"
+          >
             <header className="flex flex-col sm:flex-row items-center gap-3 justify-between mt-5 sm:mt-0">
               <div className="flex flex-col">
                 <h1 className="text-[24px] font-medium">{category.title}</h1>

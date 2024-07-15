@@ -176,7 +176,7 @@ export function AddServiceForm({ id, categories }: AddServiceFormProps) {
                           </SelectTrigger>
                           <SelectContent>
                             {categories.map((category) => (
-                              <SelectItem value={category.id}>
+                              <SelectItem key={category.id} value={category.id}>
                                 {category.title}
                               </SelectItem>
                             ))}
