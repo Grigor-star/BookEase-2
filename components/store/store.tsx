@@ -17,10 +17,7 @@ import {
 import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
-import { Skeleton } from "../ui/skeleton";
 import { signOut } from "next-auth/react";
-import { redirect } from "next/navigation";
-import { auth } from "@/auth";
 
 interface storeProps {
   id: string;
@@ -117,7 +114,7 @@ export const StoreForm = ({ email, image, name, store }: AddStoreProps) => {
           store.map((data) => (
             <Link
               key={data.id}
-              href={`/store/dashboard?id=${data.id}`}
+              href={`/store/dashboard/${data.id}`}
               className="w-full"
             >
               <div className="border-[1px] w-full border-slate-200/80 rounded-lg  px-[25px] py-3 group ease-linear duration-200 cursor-pointer hover:bg-slate-200/50">

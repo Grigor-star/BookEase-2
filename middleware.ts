@@ -20,7 +20,9 @@ export default auth(async (req) => {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-  const isStoreRoute = storeRoutes.includes(nextUrl.pathname);
+  const isStoreRoute = storeRoutes.some((route) =>
+    nextUrl.pathname.startsWith(route)
+  );
 
   if (isApiAuthRoute) {
     return undefined;
@@ -35,8 +37,10 @@ export default auth(async (req) => {
   }
 
   if (isStoreRoute) {
-    const params = nextUrl.searchParams.get("id");
-    if (!params) {
+    const params = nextUrl.pathname;
+    const arr = params.split("/");
+    const id = arr[arr.length - 1];
+    if (!id) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
     if (!email) {
@@ -47,7 +51,7 @@ export default auth(async (req) => {
     if (!userId) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }
-    const isStoreOwner = await isAdmin(params, userId);
+    const isStoreOwner = await isAdmin(id, userId);
     if (!isStoreOwner) {
       return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl));
     }

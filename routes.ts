@@ -9,4 +9,5 @@ export const storeRoutes = [
   "/store/services",
   "/store/team",
   "/store/products",
+  "/store/add-service",
 ];

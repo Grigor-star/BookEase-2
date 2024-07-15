@@ -37,9 +37,8 @@ import Image from "next/image";
 import { ModeToggle } from "./mode-toggle";
 import { MdOutlineCalendarMonth } from "react-icons/md";
 
-import { useParams, usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { isAdmin } from "@/lib/isAdmin";
 
 interface DashboardProps {
   children: React.ReactNode;
@@ -48,20 +47,25 @@ interface DashboardProps {
   image: string;
 }
 
+const navbar = [
+  {
+    label: "Dashboard",
+    href: "/store/dashboard/id",
+  },
+  {
+    label: "Dashboard",
+    href: "/store/dashboard/id",
+  },
+  {
+    label: "Dashboard",
+    href: "/store/dashboard/id",
+  },
+];
+
 export function Dashboard({ children, name, email, image }: DashboardProps) {
   const pathname = usePathname();
-  const [storeId, setStoreId] = useState<string | undefined>();
-  const searchParams = useSearchParams();
-  const id = searchParams.get("id");
-
-  useEffect(() => {
-    console.log("id:", id);
-    if (id && id.trim() !== "") {
-      setStoreId(id);
-    } else {
-      setStoreId(undefined); // or whatever default value you need
-    }
-  }, [id]);
+  const splitPathname = pathname.split("/");
+  const storeId = splitPathname[splitPathname.length - 1];
 
   return (
     <div className="grid min-h-screen w-full grid-cols-1 overflow-hidden lg:grid-cols-[280px_1fr]">
@@ -81,66 +85,66 @@ export function Dashboard({ children, name, email, image }: DashboardProps) {
             <nav className="grid items-start px-4 text-sm font-medium">
               <Link
                 className={`flex items-center gap-3 rounded-lg ${
-                  pathname === "/store/dashboard"
+                  pathname === `/store/dashboard/${storeId}`
                     ? "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
                     : "text-gray-500"
                 } px-3 py-2  transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                href={`/store/dashboard?id=${storeId}`}
+                href={`/store/dashboard/${storeId}`}
               >
                 <HomeIcon className="h-4 w-4" />
                 Dashboard
               </Link>
               <Link
                 className={`flex items-center gap-3 rounded-lg ${
-                  pathname === "/store/appointments"
+                  pathname === `/store/appointments/${storeId}`
                     ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                     : "text-gray-500"
                 } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                href={`/store/appointments?id=${storeId}`}
+                href={`/store/appointments/${storeId}`}
               >
                 <MdOutlineCalendarMonth className="h-4 w-4" />
                 Appointments
               </Link>
               <Link
                 className={`flex items-center gap-3 rounded-lg ${
-                  pathname === "/store/invoices"
+                  pathname === `/store/invoices/${storeId}`
                     ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                     : "text-gray-500"
                 } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                href={`/store/invoices?id=${storeId}`}
+                href={`/store/invoices/${storeId}`}
               >
                 <ShoppingCartIcon className="h-4 w-4" />
                 Invoices
               </Link>
               <Link
                 className={`flex items-center gap-3 rounded-lg ${
-                  pathname === "/store/services"
+                  pathname === `/store/services/${storeId}`
                     ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                     : "text-gray-500"
                 } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                href={`/store/services?id=${storeId}`}
+                href={`/store/services/${storeId}`}
               >
                 <PackageIcon className="h-4 w-4" />
-                Services
+                Catalog
               </Link>
               <Link
                 className={`flex items-center gap-3 rounded-lg ${
-                  pathname === "/store/products"
+                  pathname === `/store/products/${storeId}`
                     ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                     : "text-gray-500"
                 } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                href={`/store/products?id=${storeId}`}
+                href={`/store/products/${storeId}`}
               >
                 <BoxIcon className="h-4 w-4" />
                 Products
               </Link>
               <Link
                 className={`flex items-center gap-3 rounded-lg ${
-                  pathname === "/store/team"
+                  pathname === `/store/team/${storeId}`
                     ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                     : "text-gray-500"
                 } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                href={`/store/team?id=${storeId}`}
+                href={`/store/team/${storeId}`}
               >
                 <UsersIcon className="h-4 w-4" />
                 Team

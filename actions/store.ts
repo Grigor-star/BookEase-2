@@ -32,6 +32,15 @@ export const createStore = async (
     return { error: "Something went wrong!" };
   }
 
+  const stores = await db.store.findMany({ where: { userId: user.id } });
+
+  const existingStore = stores.some((store) => {
+    return store.name === storeName;
+  });
+
+  if (existingStore)
+    return { error: "You already have a store with th same name!" };
+
   await db.store.create({
     data: {
       name: storeName,

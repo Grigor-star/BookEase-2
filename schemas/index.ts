@@ -35,3 +35,33 @@ export const storeAddress = z.object({
 export const formattedAddress = z.object({
   formattedAddress: z.string().min(5),
 });
+
+export const categorySchema = z.object({
+  title: z.string().min(1),
+  description: z.string().min(15).max(100),
+});
+
+enum Currency {
+  DOLLAR = "DOLLAR",
+  EURO = "EURO",
+  DRAM = "DRAM",
+  RUBL = "RUBL",
+}
+
+export const serviceSchema = z.object({
+  title: z
+    .string({ message: "This field can contain only letters!" })
+    .min(1, { message: "This field is required!" })
+    .max(20),
+  description: z
+    .string()
+    .min(1, { message: "This field is required!" })
+    .max(100),
+  categoryId: z.string().min(1, { message: "This field is required!" }),
+  duration: z.string().min(1, { message: "This field is required!" }),
+  serviceType: z.string().min(1, { message: "This field is required!" }),
+  price: z
+    .string({ message: "This field can contain only numbers!" })
+    .min(1, { message: "This field is required!" }),
+  currency: z.string().min(1, { message: "This field is required!" }),
+});
