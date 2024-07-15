@@ -81,7 +81,7 @@ export function AddServiceForm({ id, categories }: AddServiceFormProps) {
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="h-full">
           <CardContent className="grid gap-4 mt-5">
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <FormField
                   name="title"
@@ -469,13 +469,23 @@ export function AddServiceForm({ id, categories }: AddServiceFormProps) {
               <FormError message={error} />
             </div>
           </CardContent>
-          <CardFooter className="justify-end flex items-center gap-3">
-            <Link href={`/store/services/${id}`}>
-              <Button disabled={isPending} size="lg" variant="outline">
+          <CardFooter className="justify-end flex items-center gap-3 w-full">
+            <Link className="w-full" href={`/store/services/${id}`}>
+              <Button
+                className="w-full sm:w-auto"
+                disabled={isPending}
+                size="lg"
+                variant="outline"
+              >
                 Close
               </Button>
             </Link>
-            <Button disabled={isPending} size="lg" type="submit">
+            <Button
+              className="w-full sm:w-auto"
+              disabled={isPending}
+              size="lg"
+              type="submit"
+            >
               {isPending ? (
                 <BeatLoader
                   color={theme.resolvedTheme !== "dark" ? "white" : "black"}

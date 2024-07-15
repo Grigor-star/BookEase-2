@@ -117,12 +117,12 @@ export const StoreForm = ({ email, image, name, store }: AddStoreProps) => {
               href={`/store/dashboard/${data.id}`}
               className="w-full"
             >
-              <div className="border-[1px] w-full border-slate-200/80 rounded-lg  px-[25px] py-3 group ease-linear duration-200 cursor-pointer hover:bg-slate-200/50">
+              <div className="w-full border rounded-lg  px-[25px] py-3 group ease-linear duration-200 cursor-pointer hover:bg-slate-200/50 dark:hover:bg-slate-900/80">
                 <div className="flex items-center space-x-1">
                   <div className="space-y-1">
                     <div className="flex items-center space-x-2">
                       <CardTitle>{data.name}</CardTitle>
-                      <CardTitle className="text-[14px] font-serif font-light text-black/65">
+                      <CardTitle className="text-[14px] font-serif font-light text-black/65 dark:text-white/65">
                         {"( "}
                         {data.category}
                         {" )"}

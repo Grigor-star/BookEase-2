@@ -165,66 +165,66 @@ export function Dashboard({ children, name, email, image }: DashboardProps) {
               <nav className="grid items-start mt-3 text-sm font-medium">
                 <Link
                   className={`flex items-center gap-3 rounded-lg ${
-                    pathname === "/store/dashboard"
+                    pathname === `/store/dashboard/${storeId}`
                       ? "bg-gray-100 text-gray-900 dark:bg-gray-800 dark:text-gray-50"
                       : "text-gray-500"
                   } px-3 py-2  transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                  href={`/store/dashboard?id=${storeId}`}
+                  href={`/store/dashboard/${storeId}`}
                 >
                   <HomeIcon className="h-4 w-4" />
                   Dashboard
                 </Link>
                 <Link
                   className={`flex items-center gap-3 rounded-lg ${
-                    pathname === "/store/appointments"
+                    pathname === `/store/appointment/${storeId}`
                       ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                       : "text-gray-500"
                   } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                  href={`/store/appointments?id=${storeId}`}
+                  href={`/store/appointments/${storeId}`}
                 >
                   <MdOutlineCalendarMonth className="h-4 w-4" />
                   Appointments
                 </Link>
                 <Link
                   className={`flex items-center gap-3 rounded-lg ${
-                    pathname === "/invoices"
+                    pathname === `/store/invoices/${storeId}`
                       ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                       : "text-gray-500"
                   } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                  href={`/store/invoices?id=${storeId}`}
+                  href={`/store/invoices/${storeId}`}
                 >
                   <ShoppingCartIcon className="h-4 w-4" />
                   Invoices
                 </Link>
                 <Link
                   className={`flex items-center gap-3 rounded-lg ${
-                    pathname === "/store/services"
+                    pathname === `/store/services/${storeId}`
                       ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                       : "text-gray-500"
                   } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                  href={`/store/services?id=${storeId}`}
+                  href={`/store/services/${storeId}`}
                 >
                   <PackageIcon className="h-4 w-4" />
-                  Services
+                  Catalog
                 </Link>
                 <Link
                   className={`flex items-center gap-3 rounded-lg ${
-                    pathname === "/store/products"
+                    pathname === `/store/products/${storeId}`
                       ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                       : "text-gray-500"
                   } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                  href={`/store/products?id=${storeId}`}
+                  href={`/store/products/${storeId}`}
                 >
                   <BoxIcon className="h-4 w-4" />
                   Products
                 </Link>
                 <Link
                   className={`flex items-center gap-3 rounded-lg ${
-                    pathname === "/store/team"
+                    pathname === `/store/team/${storeId}`
                       ? "bg-gray-100 text-gray-900 dark:bg-gray-800  dark:text-gray-50"
                       : "text-gray-500"
                   } px-3 py-2 transition-all hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-50`}
-                  href={`/store/team?id=${storeId}`}
+                  href={`/store/team/${storeId}`}
                 >
                   <UsersIcon className="h-4 w-4" />
                   Team

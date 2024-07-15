@@ -31,7 +31,6 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
   const onDelete = async (id: string) => {
     await deleteCategoryById(id);
   };
-
   const categories = await getCategoriesByStoreId(id);
   const services = await getServicesByStoreId(id);
   console.log(categories);
@@ -88,8 +87,8 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
             <>
               <header className="flex flex-col items-center gap-3">
                 <div className="flex flex-col">
-                  <h1 className="text-[24px] font-medium">All Categories</h1>
-                  <p className="text-balance opacity-60">
+                  <h1 className="text-[24px] font-medium ">All Categories</h1>
+                  <p className="text-balance opacity-60 ">
                     Here you can manage all your services
                   </p>
                 </div>
@@ -106,8 +105,10 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
             <>
               <header className="flex flex-col sm:flex-row items-center gap-3 justify-between mt-5 sm:mt-0">
                 <div className="flex flex-col">
-                  <h1 className="text-[24px] font-medium">All Categories</h1>
-                  <p className="text-[14px] text-balance opacity-60">
+                  <h1 className="text-[24px] font-medium text-center sm:text-start">
+                    All Categories
+                  </h1>
+                  <p className="text-[14px] text-balance opacity-60 text-center sm:text-start">
                     Here you can manage all your services
                   </p>
                 </div>
@@ -175,8 +176,10 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
           >
             <header className="flex flex-col sm:flex-row items-center gap-3 justify-between mt-5 sm:mt-0">
               <div className="flex flex-col">
-                <h1 className="text-[24px] font-medium">{category.title}</h1>
-                <p className="text-[16px] text-balance opacity-60">
+                <h1 className="text-[24px] font-medium text-center sm:text-start">
+                  {category.title}
+                </h1>
+                <p className="text-[16px] text-balance opacity-60 text-center sm:text-start">
                   {category.description}
                 </p>
               </div>
