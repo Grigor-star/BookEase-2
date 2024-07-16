@@ -26,7 +26,9 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "components/appointments.jsx"
+    "components/appointments.jsx",
+    "app/api/placeDetails/route.ts",
+    "app/api/autocomplete/route.ts"
   ],
   "exclude": ["node_modules"]
 }

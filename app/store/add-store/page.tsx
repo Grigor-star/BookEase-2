@@ -1,6 +1,5 @@
 "use client";
 import { createStore } from "@/actions/store";
-import { validateAddress } from "@/actions/validate";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 import { AddStoreForm } from "@/components/store/add-store-form";
@@ -27,8 +26,11 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { formattedAddress, storeAddress, storeSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useState } from "react";
+import axios from "axios";
+import { useTheme } from "next-themes";
+import { ChangeEvent, useState, useTransition } from "react";
 import { useForm } from "react-hook-form";
+import BeatLoader from "react-spinners/BeatLoader";
 import * as z from "zod";
 
 export default function AddStorePage() {
@@ -36,10 +38,65 @@ export default function AddStorePage() {
   const [validationResult, setValidationResult] = useState<any>(null);
   const [finalAddress, setFinalAddress] = useState<string>("");
   const [formatted, setFormatted] = useState<boolean>(true);
-  const [enteredAddress, setEnteredAddress] = useState<string>("");
   const [error, setError] = useState<string | null>(null);
+  const theme = useTheme();
+
   const [storeError, setStoreError] = useState<string | undefined>();
   const [storeSuccess, setStoreSuccess] = useState<string | undefined>();
+  const [isPedning, startTransition] = useTransition();
+
+  interface Prediction {
+    place_id: string;
+    description: string;
+  }
+
+  interface AddressDetails {
+    [key: string]: any;
+  }
+
+  const [input, setInput] = useState<string>("");
+  const [suggestions, setSuggestions] = useState<Prediction[]>([]);
+  const [address, setAddress] = useState<AddressDetails | null>(null);
+
+  const handleInputChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    setInput(value);
+
+    if (value.length > 2) {
+      try {
+        const response = await axios.get<Prediction[]>("/api/autocomplete", {
+          params: { input: value },
+        });
+        setSuggestions(response.data);
+      } catch (error: any) {
+        setError(error.response ? error.response.data.error : error.message);
+      }
+    } else {
+      setSuggestions([]);
+    }
+  };
+
+  const handleSelectSuggestion = async (
+    placeId: string,
+    description: string
+  ) => {
+    startTransition(async () => {
+      try {
+        const response = await axios.get<AddressDetails>("/api/placeDetails", {
+          params: { placeId },
+        });
+        setAddress(response.data);
+        setValidationResult(response.data);
+        setFinalAddress(description);
+        setError(null);
+        setSuggestions([]);
+        setInput("");
+      } catch (error: any) {
+        setError(error.response ? error.response.data.error : error.message);
+        setAddress(null);
+      }
+    });
+  };
 
   const form1 = useForm<z.infer<typeof storeSchema>>({
     resolver: zodResolver(storeSchema),
@@ -50,69 +107,28 @@ export default function AddStorePage() {
     },
   });
 
-  const form2 = useForm<z.infer<typeof storeAddress>>({
-    resolver: zodResolver(storeAddress),
-    defaultValues: {
-      country: "",
-      streetAddress: "",
-      state: "",
-      city: "",
-      zipCode: "",
-    },
-  });
-
   const onSubmit3 = async () => {
-    const values = {
-      storeName: form1.getValues("storeName"),
-      category: form1.getValues("category"),
-      description: form1.getValues("description"),
-    };
-    setStoreError("");
-    setStoreError("");
-    await createStore(values, finalAddress).then((data) => {
-      if (data.error) {
-        setStoreError(data.error);
-      }
-      if (data.success) {
-        setStoreSuccess(data.success);
-      }
+    startTransition(async () => {
+      const values = {
+        storeName: form1.getValues("storeName"),
+        category: form1.getValues("category"),
+        description: form1.getValues("description"),
+      };
+      setStoreError("");
+      setStoreSuccess("");
+      await createStore(values, finalAddress).then((data) => {
+        if (data.error) {
+          setStoreError(data.error);
+        }
+        if (data.success) {
+          setStoreSuccess(data.success);
+        }
+      });
     });
   };
 
-  const onSubmit = (values: z.infer<typeof storeSchema>) => {
+  const onSubmit = () => {
     setPage(page + 1);
-    console.log(values);
-  };
-
-  const onSubmit2 = async (values: z.infer<typeof storeAddress>) => {
-    const result = await validateAddress(
-      values.streetAddress,
-      values.country,
-      values.city,
-      values.state,
-      values.zipCode
-    );
-    const address =
-      values.streetAddress +
-      " , " +
-      values.zipCode +
-      " " +
-      values.city +
-      " " +
-      values.state +
-      " , " +
-      values.country;
-
-    setEnteredAddress(address);
-    if (result) {
-      setValidationResult(result);
-      console.log(result);
-      setPage(page + 1);
-      setError(null);
-    } else {
-      setError("Failed to validate address");
-      setValidationResult(null);
-    }
   };
 
   return (
@@ -213,245 +229,83 @@ export default function AddStorePage() {
           </div>
         )}
         {page === 2 && (
-          <div>
-            <Form {...form2}>
-              <form
-                onSubmit={form2.handleSubmit(onSubmit2)}
-                className="flex flex-col space-y-4"
-              >
-                <FormField
-                  control={form2.control}
-                  name="country"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <div className="flex space-x-2 items-center justify-center">
-                          <Select
-                            onValueChange={field.onChange}
-                            defaultValue={field.value}
-                          >
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder="Select the country" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectGroup>
-                                <SelectItem value="AR">🇦🇷 Argentina</SelectItem>
-                                <SelectItem value="AU">🇦🇺 Australia</SelectItem>
-                                <SelectItem value="AT">🇦🇹 Austria</SelectItem>
-                                <SelectItem value="BE">🇧🇪 Belgium</SelectItem>
-                                <SelectItem value="BR">🇧🇷 Brazil</SelectItem>
-                                <SelectItem value="BG">🇧🇬 Bulgaria</SelectItem>
-                                <SelectItem value="CA">🇨🇦 Canada</SelectItem>
-                                <SelectItem value="CL">🇨🇱 Chile</SelectItem>
-                                <SelectItem value="CO">🇨🇴 Colombia</SelectItem>
-                                <SelectItem value="HR">🇭🇷 Croatia</SelectItem>
-                                <SelectItem value="CZ">🇨🇿 Czechia</SelectItem>
-                                <SelectItem value="DK">🇩🇰 Denmark</SelectItem>
-                                <SelectItem value="EE">🇪🇪 Estonia</SelectItem>
-                                <SelectItem value="FI">🇫🇮 Finland</SelectItem>
-                                <SelectItem value="FR">🇫🇷 France</SelectItem>
-                                <SelectItem value="DE">🇩🇪 Germany</SelectItem>
-                                <SelectItem value="HU">🇭🇺 Hungary</SelectItem>
-                                <SelectItem value="IE">🇮🇪 Ireland</SelectItem>
-                                <SelectItem value="IT">🇮🇹 Italy</SelectItem>
-                                <SelectItem value="LV">🇱🇻 Latvia</SelectItem>
-                                <SelectItem value="LT">🇱🇹 Lithuania</SelectItem>
-                                <SelectItem value="LU">
-                                  🇱🇺 Luxembourg
-                                </SelectItem>
-                                <SelectItem value="MY">🇲🇾 Malaysia</SelectItem>
-                                <SelectItem value="MX">🇲🇽 Mexico</SelectItem>
-                                <SelectItem value="NL">
-                                  🇳🇱 Netherlands
-                                </SelectItem>
-                                <SelectItem value="NO">🇳🇴 Norway</SelectItem>
-                                <SelectItem value="NZ">
-                                  🇳🇿 New Zealand
-                                </SelectItem>
-                                <SelectItem value="PL">🇵🇱 Poland</SelectItem>
-                                <SelectItem value="PT">🇵🇹 Portugal</SelectItem>
-                                <SelectItem value="PR">
-                                  🇵🇷 Puerto Rico
-                                </SelectItem>
-                                <SelectItem value="SG">🇸🇬 Singapore</SelectItem>
-                                <SelectItem value="SK">🇸🇰 Slovakia</SelectItem>
-                                <SelectItem value="SI">🇸🇮 Slovenia</SelectItem>
-                                <SelectItem value="ES">🇪🇸 Spain</SelectItem>
-                                <SelectItem value="SE">🇸🇪 Sweden</SelectItem>
-                                <SelectItem value="CH">
-                                  🇨🇭 Switzerland
-                                </SelectItem>
-                                <SelectItem value="GB">
-                                  🇬🇧 United Kingdom
-                                </SelectItem>
-                                <SelectItem value="US">
-                                  🇺🇸 United States
-                                </SelectItem>
-                              </SelectGroup>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-                <div className="flex space-x-2 items-center justify-center">
-                  <FormField
-                    control={form2.control}
-                    name="state"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormControl>
-                          <Input
-                            {...field}
-                            className="w-full"
-                            type="text"
-                            placeholder="State / Province"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form2.control}
-                    name="city"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormControl>
-                          <Input
-                            {...field}
-                            className="w-full"
-                            type="text"
-                            placeholder="City"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-                <div className="flex space-x-2 items-center">
-                  <FormField
-                    control={form2.control}
-                    name="zipCode"
-                    render={({ field }) => (
-                      <FormItem className="w-[50%]">
-                        <FormControl>
-                          <Input
-                            {...field}
-                            className="w-full"
-                            placeholder="ZIP Code"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form2.control}
-                    name="streetAddress"
-                    render={({ field }) => (
-                      <FormItem className="w-full">
-                        <FormControl>
-                          <Input
-                            {...field}
-                            className="w-full"
-                            type="text"
-                            placeholder="Street Address"
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
+          <div className="flex flex-col space-y-2">
+            <div>
+              <Input
+                type="text"
+                value={input}
+                onChange={handleInputChange}
+                placeholder="Enter address"
+              />
 
-                <div className="flex flex-col w-full items-center space-y-2">
-                  <Button type="submit" className="w-full">
-                    Check
-                  </Button>
-                  <Button
-                    variant="outline"
-                    className="w-full"
-                    onClick={() => setPage(page - 1)}
-                  >
-                    Back
-                  </Button>
+              {suggestions.length > 0 && (
+                <div className="border rounded p-2">
+                  <h1 className="text-[12px] font-medium opacity-55">
+                    Sugesstions
+                  </h1>
+                  <ul className="mt-2">
+                    {suggestions.map((suggestion) => (
+                      <li
+                        className="w-full hover:bg-slate-300/40 cursor-pointer py-1 rounded"
+                        key={suggestion.place_id}
+                        onClick={() =>
+                          handleSelectSuggestion(
+                            suggestion.place_id,
+                            suggestion.description
+                          )
+                        }
+                      >
+                        <p className="px-2">{suggestion.description}</p>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-              </form>
-            </Form>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+              )}
+
+              <div className="mt-5">
+                {isPedning ? (
+                  <BeatLoader
+                    color={theme.resolvedTheme !== "dark" ? "white" : "black"}
+                    size={10}
+                  />
+                ) : (
+                  <EmbeddedMap
+                    address={JSON.stringify(address)}
+                    width="100%"
+                    height="250px"
+                  />
+                )}
+              </div>
+
+              {error && <p style={{ color: "red" }}>{error}</p>}
+            </div>
+            <div className="space-y-2">
+              <Button
+                disabled={isPedning}
+                className="w-full"
+                onClick={() => setPage(page + 1)}
+              >
+                {isPedning ? (
+                  <BeatLoader
+                    color={theme.resolvedTheme !== "dark" ? "white" : "black"}
+                    size={10}
+                  />
+                ) : (
+                  "Confirm"
+                )}
+              </Button>
+              <Button
+                disabled={isPedning}
+                variant="outline"
+                onClick={() => setPage(page - 1)}
+                className="w-full"
+              >
+                Go Back
+              </Button>
+            </div>
           </div>
         )}
         {page === 3 && (
-          <div className="flex flex-col space-y-3">
-            <Alert
-              onClick={() => {
-                setFinalAddress(enteredAddress);
-                setFormatted(false);
-              }}
-              className={`cursor-pointer group hover:bg-slate-300/20 ${
-                !formatted && "border-blue-600"
-              }  hover:border-blue-600`}
-            >
-              <AlertTitle
-                className={`group-hover:text-blue-600 ${
-                  !formatted && "text-blue-600"
-                }`}
-              >
-                What you entered
-              </AlertTitle>
-              <AlertDescription>
-                {'"'}
-                {enteredAddress}
-                {'"'}
-              </AlertDescription>
-            </Alert>
-            <Alert
-              onClick={() => {
-                setFinalAddress(validationResult.formattedAddress);
-                setFormatted(true);
-              }}
-              className={`m-0 p-0 cursor-pointer group hover:bg-slate-300/20 ${
-                formatted && "border-blue-600"
-              } hover:border-blue-600`}
-            >
-              <div className="p-4">
-                <AlertTitle
-                  className={`group-hover:text-blue-600 ${
-                    formatted && "text-blue-600"
-                  }`}
-                >
-                  Recomended
-                </AlertTitle>
-                <AlertDescription>
-                  {JSON.stringify(validationResult.formattedAddress)}
-                </AlertDescription>
-              </div>
-              <hr
-                className={`group-hover:border-blue-600 ${
-                  formatted && "border-blue-600"
-                }`}
-              />
-              <EmbeddedMap
-                width="100%"
-                height="250px"
-                address={JSON.stringify(validationResult)}
-              />
-            </Alert>
-            <Button onClick={() => setPage(page + 1)}>Confirm</Button>
-            <Button
-              variant="outline"
-              onClick={() => setPage(page - 1)}
-              className="w-full"
-            >
-              Go Back
-            </Button>
-          </div>
-        )}
-        {page === 4 && (
           <div className="flex flex-col space-y-3">
             <div className=" w-full flex space-x-2 items-center justify-center">
               <div className="w-full">
@@ -509,25 +363,34 @@ export default function AddStorePage() {
             <Alert className="m-0 p-0">
               <div className="p-4">
                 <AlertTitle>Address</AlertTitle>
-                <AlertDescription>
-                  {JSON.stringify(validationResult.formattedAddress)}
-                </AlertDescription>
+                <AlertDescription>{finalAddress}</AlertDescription>
               </div>
               <hr className=" group-hover:border-blue-600" />
-              {formatted && (
-                <EmbeddedMap
-                  width="100%"
-                  height="250px"
-                  address={JSON.stringify(validationResult)}
-                />
-              )}
+
+              <EmbeddedMap
+                width="100%"
+                height="250px"
+                address={JSON.stringify(validationResult)}
+              />
             </Alert>
             <FormError message={storeError} />
             <FormSuccess message={storeSuccess} />
-            <Button onClick={() => onSubmit3()} className="w-full">
-              Create Store
+            <Button
+              disabled={isPedning}
+              onClick={() => onSubmit3()}
+              className="w-full"
+            >
+              {isPedning ? (
+                <BeatLoader
+                  color={theme.resolvedTheme !== "dark" ? "white" : "black"}
+                  size={10}
+                />
+              ) : (
+                "Create Store"
+              )}
             </Button>
             <Button
+              disabled={isPedning}
               variant="outline"
               onClick={() => setPage(page - 1)}
               className="w-full"

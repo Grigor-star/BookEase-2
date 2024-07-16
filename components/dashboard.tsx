@@ -267,7 +267,7 @@ export function Dashboard({ children, name, email, image }: DashboardProps) {
                 <span className="sr-only">Toggle user menu</span>
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-[200px]" align="end">
+            <DropdownMenuContent className="w-[100%]" align="end">
               <div className="px-2 flex flex-col space-y-1 mt-2 mb-2">
                 <h1 className="font-semibold text-[14px]">{name}</h1>
                 <p className="text-[12px] opacity-60">{email}</p>
@@ -276,7 +276,7 @@ export function Dashboard({ children, name, email, image }: DashboardProps) {
               {pathname !== "/store" && (
                 <Link href="/store">
                   <DropdownMenuItem className="cursor-pointer">
-                    Store
+                    Stores
                   </DropdownMenuItem>
                 </Link>
               )}
