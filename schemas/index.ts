@@ -16,7 +16,7 @@ export const storeSchema = z.object({
   storeName: z
     .string()
     .min(1, { message: "This field is required!" })
-    .max(15, { message: "Maximum 15 characters!" }),
+    .max(30, { message: "Maximum 30 characters!" }),
   category: z.string().min(1, { message: "Select at least one category!" }),
   description: z
     .string()
