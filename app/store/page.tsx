@@ -34,7 +34,7 @@ export default async function StorePage() {
   });
 
   return (
-    <div className="w-full h-full flex justify-center items-center dark:bg-black">
+    <div className="w-full h-full flex justify-center sm:items-center dark:bg-black">
       <StoreForm name={name} image={image} email={email} store={store} />
     </div>
   );

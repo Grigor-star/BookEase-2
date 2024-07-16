@@ -18,6 +18,7 @@ import { Button } from "../ui/button";
 import Image from "next/image";
 import Link from "next/link";
 import { signOut } from "next-auth/react";
+import useMediaQuery from "@/hooks/useMediaQuery";
 
 interface storeProps {
   id: string;
