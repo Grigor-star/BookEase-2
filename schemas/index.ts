@@ -11,7 +11,7 @@ export const registerSchema = z.object({
   password: z.string().min(6),
   confirmPassword: z.string().min(6),
 });
-``;
+
 export const storeSchema = z.object({
   storeName: z
     .string()
@@ -21,15 +21,7 @@ export const storeSchema = z.object({
   description: z
     .string()
     .min(10, { message: "At least 10 characters!" })
-    .max(50, { message: "Maximum 50 characters!" }),
-});
-
-export const storeAddress = z.object({
-  country: z.string().min(1, { message: "Select a country!" }),
-  streetAddress: z.string().min(1, { message: "This field is required!" }),
-  state: z.string().min(1, { message: "This field is required!" }),
-  city: z.string().min(1, { message: "This field is required!" }),
-  zipCode: z.string().min(4, { message: "Invalid postalCode" }),
+    .max(100, { message: "Maximum 50 characters!" }),
 });
 
 export const formattedAddress = z.object({
@@ -40,13 +32,6 @@ export const categorySchema = z.object({
   title: z.string().min(1),
   description: z.string().min(15).max(100),
 });
-
-enum Currency {
-  DOLLAR = "DOLLAR",
-  EURO = "EURO",
-  DRAM = "DRAM",
-  RUBL = "RUBL",
-}
 
 export const serviceSchema = z.object({
   title: z

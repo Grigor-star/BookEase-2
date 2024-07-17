@@ -56,9 +56,9 @@ export const CatalogButtonsManage = ({ id }: CatalogButtonsProps) => {
             Manage
           </Button>
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent className="w-full sm:w-auto">
           <DialogTrigger asChild className="text-destructive text-left w-full">
-            <DropdownMenuItem className="text-destructive font-bold cursor-pointer">
+            <DropdownMenuItem className="text-destructive font-bold cursor-pointer w-full sm:w-auto">
               Delete
             </DropdownMenuItem>
           </DialogTrigger>

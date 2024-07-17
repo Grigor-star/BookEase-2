@@ -84,8 +84,9 @@ export const AddCategoryForm = ({
     return (
       <Drawer open={open} onOpenChange={setOpen}>
         <DrawerTrigger asChild={button} className={className}>
-          {button ? <Button>{trigger}</Button> : `${trigger}`}{" "}
+          {button ? <Button>{trigger}</Button> : <>{trigger}</>}
         </DrawerTrigger>
+
         <DrawerContent className="px-2">
           <DrawerHeader className="text-left">
             <DrawerTitle>Add Category</DrawerTitle>
@@ -156,8 +157,9 @@ export const AddCategoryForm = ({
   return (
     <Dialog>
       <DialogTrigger asChild={button} className={className}>
-        {button ? <Button>{trigger}</Button> : `${trigger}`}
+        {button ? <Button>{trigger}</Button> : <>{trigger}</>}
       </DialogTrigger>
+
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-center">

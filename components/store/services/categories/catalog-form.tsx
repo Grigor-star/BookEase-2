@@ -10,7 +10,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 
 import { CatalogButtonsManage } from "./manage-category";
-import { ServicesForm } from "./services-form";
+import { ServicesForm } from "../service/services-form";
 import Link from "next/link";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 import { CategoryServicesForm } from "./category-services-form";
@@ -142,7 +142,8 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
                             {service.currency}
                           </p>
                           <p className="sm:text-[0] text-[16px]">
-                            {service.price}
+                            {service.price} {service.currency === "EUR" && "€"}
+                            {service.currency === "AMD" && "֏"}
                           </p>
                         </div>
                       </div>
@@ -153,6 +154,8 @@ export const CatalogForm = async ({ id }: ServicesFormProps) => {
                           </p>
                           <p className="text-[0px] sm:text-[16px]">
                             {service.price}
+                            {service.currency === "EUR" && "€"}
+                            {service.currency === "AMD" && "֏"}
                           </p>
                         </div>
                         <div className="flex flex-col space-y-1 cursor-pointer p-2">

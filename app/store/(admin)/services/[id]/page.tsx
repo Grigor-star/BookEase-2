@@ -1,4 +1,4 @@
-import { CatalogForm } from "@/components/store/services/catalog-form";
+import { CatalogForm } from "@/components/store/services/categories/catalog-form";
 
 export default async function Services({ params }: { params: { id: string } }) {
   return (

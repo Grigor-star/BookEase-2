@@ -1,4 +1,4 @@
-import { AddServiceForm } from "@/components/store/services/add-service-form";
+import { AddServiceForm } from "@/components/store/services/service/add-service-form";
 import { Button } from "@/components/ui/button";
 import { db } from "@/lib/db";
 import Link from "next/link";

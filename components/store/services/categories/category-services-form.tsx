@@ -1,5 +1,5 @@
 import { db } from "@/lib/db";
-import { ServicesForm } from "./services-form";
+import { ServicesForm } from "../service/services-form";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
 
 interface CategoryServicesFormProps {
