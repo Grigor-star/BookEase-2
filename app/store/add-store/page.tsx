@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import useMediaQuery from "@/hooks/useMediaQuery";
-import { formattedAddress, storeAddress, storeSchema } from "@/schemas";
+import { storeSchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useTheme } from "next-themes";
