@@ -1,16 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { getServicesByCategoryId } from "@/data/services";
 import { cn } from "@/lib/utils";
-import { AddServiceForm } from "./add-service";
 import Link from "next/link";
 
 interface ServicesFormProps {
   id: string;
   className?: string;
+  storeId: string;
 }
 
-export const ServicesForm = async ({ id, className }: ServicesFormProps) => {
-  const services = await getServicesByCategoryId(id);
+export const ServicesForm = async ({
+  id,
+  className,
+  storeId,
+}: ServicesFormProps) => {
+  const services = await getServicesByCategoryId(id, storeId);
   if (services.length === 0) {
     return (
       <div className={cn(`h-full ${className}`)}>
@@ -23,7 +27,7 @@ export const ServicesForm = async ({ id, className }: ServicesFormProps) => {
               Please create at least one category so you will be able to add
               your services.
             </p>
-            <Link className={className} href={`/store/add-service/${id}`}>
+            <Link className={className} href={`/store/add-service/${storeId}`}>
               <Button size="lg">Add Service</Button>
             </Link>
           </div>

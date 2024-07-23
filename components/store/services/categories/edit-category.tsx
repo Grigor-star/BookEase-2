@@ -18,7 +18,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { categorySchema } from "@/schemas";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createCategory } from "@/actions/services/category";
+import { createCategory, editCategory } from "@/actions/services/category";
 import { useState, useTransition } from "react";
 import { FormSuccess } from "@/components/form-success";
 import { FormError } from "@/components/form-error";
@@ -37,25 +37,27 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer";
 
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
-
 interface AddCategoryFormProps {
-  id: string;
-  trigger: string;
+  storeId: string;
+  trigger: any;
   className?: string;
   button?: boolean;
+  category: Category;
 }
 
-export const AddCategoryForm = ({
-  id,
+interface Category {
+  id: string;
+  storeId: string;
+  title: string;
+  description: string;
+}
+
+export const EditCategoryForm = ({
+  storeId,
   trigger,
   className,
   button,
+  category,
 }: AddCategoryFormProps) => {
   const [error, setError] = useState<string | undefined>();
 
@@ -77,7 +79,7 @@ export const AddCategoryForm = ({
     setError("");
     setSuccess("");
     startTransition(() => {
-      createCategory(values, id).then((data) => {
+      editCategory(values, storeId, category.id).then((data) => {
         if (data.success) {
           setSuccess(data.success);
           router.refresh();
@@ -96,9 +98,9 @@ export const AddCategoryForm = ({
 
         <DrawerContent className="px-2">
           <DrawerHeader className="text-left">
-            <DrawerTitle>Add Category</DrawerTitle>
+            <DrawerTitle>Edit Category</DrawerTitle>
             <DrawerDescription>
-              Add the required info below and save to continue.
+              Change the necessary info below and save to continue.
             </DrawerDescription>
           </DrawerHeader>
           <form onSubmit={handleSubmit(onSubmit)} className="px-4">
@@ -108,6 +110,7 @@ export const AddCategoryForm = ({
                   Title
                 </Label>
                 <Input
+                  defaultValue={category.title}
                   {...register("title")}
                   disabled={isPending}
                   id="name"
@@ -125,6 +128,7 @@ export const AddCategoryForm = ({
                   Description
                 </Label>
                 <Textarea
+                  defaultValue={category.description}
                   disabled={isPending}
                   {...register("description")}
                   placeholder="Type here..."
@@ -183,6 +187,7 @@ export const AddCategoryForm = ({
                 Title
               </Label>
               <Input
+                defaultValue={category.title}
                 {...register("title")}
                 disabled={isPending}
                 id="name"
@@ -200,6 +205,7 @@ export const AddCategoryForm = ({
                 Description
               </Label>
               <Textarea
+                defaultValue={category.description}
                 disabled={isPending}
                 {...register("description")}
                 placeholder="Type here..."

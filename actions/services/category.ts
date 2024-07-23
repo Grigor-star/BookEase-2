@@ -26,3 +26,30 @@ export const createCategory = async (
   });
   return { success: "Category added successfully" };
 };
+
+export const editCategory = async (
+  values: z.infer<typeof categorySchema>,
+  storeId: string,
+  categoryId: string
+) => {
+  const validatedField = categorySchema.safeParse(values);
+
+  if (!validatedField.success) return { error: "Invalid fields" };
+
+  const { title, description } = validatedField.data;
+
+  const storeCategoires = await db.category.findMany({ where: { storeId } });
+
+  const existingCategoires = storeCategoires.some((item) => {
+    return item.title === title;
+  });
+
+  if (existingCategoires)
+    return { error: "A Category with the same title already exists!" };
+
+  await db.category.update({
+    where: { id: categoryId },
+    data: { title: title, description: description, storeId },
+  });
+  return { success: "Category has been changed successfully" };
+};

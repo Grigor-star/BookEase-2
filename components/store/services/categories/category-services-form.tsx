@@ -1,23 +1,33 @@
 import { db } from "@/lib/db";
 import { ServicesForm } from "../service/services-form";
 import { Card, CardContent, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import Link from "next/link";
+import { SerivceButtonsManage } from "./manage-category";
 
 interface CategoryServicesFormProps {
   id: string;
+  storeId: string;
 }
 
 export const CategoryServicesForm = async ({
   id,
+  storeId,
 }: CategoryServicesFormProps) => {
   const services = await db.service.findMany({ where: { categoryId: id } });
   if (services.length < 1) {
-    return <ServicesForm className="mt-6" id={id} />;
+    return <ServicesForm storeId={storeId} className="mt-6" id={id} />;
   }
   return (
     <>
       {services.map((service) => (
         <div key={service.id}>
-          <Card className="flex flex-col my-4 shadow-none">
+          <Card className="flex flex-col my-4 shadow-none cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-900/45 ease-linear duration-200">
             <CardContent className="flex py-3 justify-between items-center">
               <div className="flex flex-col space-y-1">
                 <CardTitle className="text-[18px]">{service.title}</CardTitle>
@@ -37,11 +47,7 @@ export const CategoryServicesForm = async ({
                   </p>
                   <p className="text-[0px] sm:text-[16px]">{service.price}</p>
                 </div>
-                <div className="flex flex-col space-y-1 cursor-pointer p-2">
-                  <div className="w-[3px] h-[3px] rounded-full bg-black dark:bg-white"></div>
-                  <div className="w-[3px] h-[3px] rounded-full bg-black dark:bg-white"></div>
-                  <div className="w-[3px] h-[3px] rounded-full bg-black dark:bg-white"></div>
-                </div>
+                <SerivceButtonsManage storeId={storeId} id={service.id} />
               </div>
             </CardContent>
           </Card>
